@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title></title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<style>
+			body {
+				font-family: Monospace;
+				background-color: #f0f0f0;
+				margin: 0px;
+				overflow: hidden;
+				
+				background: #feccb1; /* Old browsers */
+				background: -moz-linear-gradient(top,  #feccb1 0%, #f17432 36%, #aa0552 66%, #3d172c 100%); /* FF3.6+ */
+				background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#feccb1), color-stop(36%,#f17432), color-stop(66%,#aa0552), color-stop(100%,#3d172c)); /* Chrome,Safari4+ */
+				background: -webkit-linear-gradient(top,  #feccb1 0%,#f17432 36%,#aa0552 66%,#3d172c 100%); /* Chrome10+,Safari5.1+ */
+				background: -o-linear-gradient(top,  #feccb1 0%,#f17432 36%,#aa0552 66%,#3d172c 100%); /* Opera 11.10+ */
+				background: -ms-linear-gradient(top,  #feccb1 0%,#f17432 36%,#aa0552 66%,#3d172c 100%); /* IE10+ */
+				background: linear-gradient(to bottom,  #feccb1 0%,#f17432 36%,#aa0552 66%,#3d172c 100%); /* W3C */
+				filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#feccb1', endColorstr='#3d172c',GradientType=0 ); /* IE6-9 */
+			}
+		</style>
+	</head>
+	<body>
+
+		<script src="lib/three.min.js"></script>
+		<script src="lib/js/libs/stats.min.js"></script>
+		<script src="lib/js/controls/FirstPersonControls.js"></script>
+		
+		<script src="lib/d3-threeD.js"></script>
+		
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
+		<script>window.jQuery || document.write('<script src="lib/jquery-1.8.0.min.js"><\/script>')</script>
+		
+		<script>
+
+			var container, stats;
+
+			var camera, controls, scene, renderer;
+
+			var cube, plane, grp;
+
+			var targetRotation = 0;
+			var targetRotationOnMouseDown = 0;
+
+			var mouseX = 0;
+			var mouseXOnMouseDown = 0;
+
+			var windowHalfX = window.innerWidth / 2;
+			var windowHalfY = window.innerHeight / 2;
+			
+			var clock = new THREE.Clock();
+			
+			$.get('geo/zuri.svg', function(data) {
+
+				init(data);
+				animate();
+			
+			});
+
+			function init(data) {
+
+				container = document.createElement( 'div' );
+				document.body.appendChild( container );
+
+				camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 2000 );
+				//camera.position.set( -15.5868665338305465, -3.712257779438737, 0.07787497775670281 );
+				//camera.rotation.set( 2.1286584488346785, -0.379550191161736, 2.6057608255023252 );
+				
+				camera.position.set( 222.1100527480134, -918.2427278042287, -134.61742544252027);
+				
+				grp = new THREE.Object3D();
+				
+				//controls = new THREE.OrbitControls( camera );
+				//controls.addEventListener( 'change', render );
+				
+				controls = new THREE.FirstPersonControls( camera );
+				controls.movementSpeed = 100;
+				controls.lookSpeed = 0.1;
+
+				scene = new THREE.Scene();
+				
+				// lights
+				
+				scene.add( new THREE.AmbientLight( 0x999999 ) );
+				
+				pointLight = new THREE.PointLight( 0xffffff, 1 );
+				scene.add( pointLight );
+				
+				// textures
+				
+				 var buildingMaterials = [];
+
+				  for (var i = 0; i < 62; i++) {
+							
+					var texture = THREE.ImageUtils.loadTexture('http://opendata.utou.ch/threeffiti/images/IMAG00' + (i + 37) + '.JPG', {}, function() { renderer.render(scene, camera); });
+					
+					//var texture = THREE.ImageUtils.loadTexture( "../../three.js/examples/textures/crate.gif" );
+
+					texture.needsUpdate = true;
+					
+					//texture.repeat.x = 0.01;
+					//texture.repeat.y = 0.01;
+		
+					buildingMaterials.push(new THREE.MeshBasicMaterial( { map: texture } ));
+					//buildingMaterials.push(new THREE.MeshPhongMaterial( { color: buildingColor.getHex(), map: texture } ));
+				  }
+				
+				var greyMaterial = new THREE.MeshLambertMaterial( { color: 0xdddddd, shading: THREE.FlatShading } );
+				
+				
+				// geometry
+				
+				var extrudeSettings = {	amount: 10, bevelEnabled: false }; 
+				var count = 0;
+				
+				$('g path', data).each(function() {
+					count++;
+									
+					var g = new THREE.ExtrudeGeometry( 
+							transformSVGPath( $(this).attr('d') ), 
+							extrudeSettings );
+					
+					if (typeof g == 'undefined') return;
+					if (typeof g.faces == 'undefined') return;
+					
+					var tex;
+					if (false) { //buildingMaterials.length > 0) {
+						
+						for ( var i = 0; i < g.faces.length; i ++ ) {
+							g.faces[i].materialIndex = 0;
+						}
+						myface = g.faces[Math.round(Math.random() * g.faces.length)];
+						if (typeof myface != 'undefined') {
+							myface.materialIndex = 1;
+						}
+						g.computeFaceNormals();
+						g.computeVertexNormals( true );
+						tex = new THREE.MeshFaceMaterial( [ greyMaterial, buildingMaterials.pop() ] );
+					
+					} else {
+						
+						tex = greyMaterial;
+						
+					}
+					var mesh = new THREE.Mesh( g, tex );
+					mesh.position.x -= 1000;
+					mesh.position.y -= 1000;
+												
+					grp.add(mesh)
+				});
+				
+				for (var i = 0; i < buildingMaterials.length; i++) {
+					var cube = new THREE.PlaneGeometry(50,30);		
+					var cubemesh = new THREE.Mesh( cube, buildingMaterials[i] );		
+					var ranchild = grp.children[Math.round(Math.random() * count)];
+					
+					cubemesh.position.x = ranchild.geometry.vertices[0].x - 1000; //Math.random() * 1000 - 500;
+					cubemesh.position.y = ranchild.geometry.vertices[0].y - 1000;
+					cubemesh.position.z = 15;
+					
+					//cubemesh.rotation.z = Math.random();
+					cubemesh.rotation.x = -90 * Math.PI / 180;
+					
+					cubemesh.material.side = THREE.DoubleSide;
+					cubemesh.scale.y = -1;
+					
+					grp.add(cubemesh); 
+				}
+				
+				scene.add(grp);
+				//grp.rotation.z = 10 * Math.PI / 180;
+				grp.rotation.x = -90 * Math.PI / 180;
+				//grp.position.x -= 1000;
+				//grp.position.y -= 800;
+				//grp.position.z += 5;
+				
+				camera.lookAt( grp.position );
+				/*
+// world
+
+				var geometry = new THREE.CylinderGeometry( 0, 10, 30, 4, 1 );
+				var material =  new THREE.MeshLambertMaterial( { color:0xffffff, shading: THREE.FlatShading } );
+
+				for ( var i = 0; i < 500; i ++ ) {
+
+					var mesh = new THREE.Mesh( geometry, material );
+					mesh.position.x = ( Math.random() - 0.5 ) * 1000;
+					mesh.position.y = ( Math.random() - 0.5 ) * 1000;
+					mesh.position.z = ( Math.random() - 0.5 ) * 1000;
+					mesh.updateMatrix();
+					mesh.matrixAutoUpdate = false;
+					scene.add( mesh );
+
+				}
+*/
+/*
+				// Cube
+
+				var geometry = new THREE.CubeGeometry( 200, 200, 200 );
+
+				for ( var i = 0; i < geometry.faces.length; i ++ ) {
+
+					geometry.faces[ i ].color.setHex( Math.random() * 0xffffff );
+
+				}
+
+				var material; // = new THREE.MeshBasicMaterial( { vertexColors: THREE.FaceColors } );
+				
+				var texture = THREE.ImageUtils.loadTexture('images/IMAG010' + i + '.JPG', {}, function() {
+					renderer.render(scene, camera);
+				});
+
+				texture.needsUpdate = true;
+				
+				material = new THREE.MeshBasicMaterial( { map: texture } );
+
+				cube = new THREE.Mesh( geometry, material );
+				cube.position.y = 150;
+				scene.add( cube );
+
+				// Plane
+
+				var geometry = new THREE.PlaneGeometry( 200, 200 );
+				geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
+
+				var material = new THREE.MeshBasicMaterial( { color: 0xe0e0e0 } );
+
+				plane = new THREE.Mesh( geometry, material );
+				scene.add( plane );
+*/				
+
+				renderer = new THREE.WebGLRenderer();
+				renderer.setSize( window.innerWidth, window.innerHeight );
+
+				container.appendChild( renderer.domElement );
+
+				stats = new Stats();
+				stats.domElement.style.position = 'absolute';
+				stats.domElement.style.top = '0px';
+				container.appendChild( stats.domElement );
+
+				//
+
+				window.addEventListener( 'resize', onWindowResize, false );
+
+			}
+
+			function onWindowResize() {
+
+				windowHalfX = window.innerWidth / 2;
+				windowHalfY = window.innerHeight / 2;
+
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+
+				renderer.setSize( window.innerWidth, window.innerHeight );
+
+			}
+
+			//
+
+			//
+
+			function animate() {
+
+				requestAnimationFrame( animate );
+				render();
+				stats.update();
+
+			}
+
+			function render() {
+
+				//plane.rotation.y = cube.rotation.y += ( targetRotation - cube.rotation.y ) * 0.05;
+				
+				controls.update( clock.getDelta() );
+				
+				/*
+				 camera.lookAt( scene.position );
+ 
+				  var timer = new Date().getTime() * 0.0005;
+				 
+				  camera.position.x = Math.floor(Math.cos( timer ) * 1900);
+				  camera.position.z = Math.floor(Math.sin( timer ) * 1900);
+				*/
+				
+				renderer.render( scene, camera );
+				
+			}
+
+		</script>
+
+	</body>
+</html>
