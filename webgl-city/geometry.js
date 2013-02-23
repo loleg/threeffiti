@@ -82,7 +82,7 @@ City.prototype.buildMaterials = function() {
     var b = r;
     var buildingColor = new THREE.Color(0xffffff).setRGB(r, g, b);
     
-    var texture = THREE.ImageUtils.loadTexture('images/IMAG00' + (37+i) + '.JPG', {}, function() {
+    var texture = THREE.ImageUtils.loadTexture('http://opendata.utou.ch/threeffiti/images/IMAG00' + (37+i) + '.JPG', {}, function() {
 		renderer.render(scene, camera);
 	});
 
