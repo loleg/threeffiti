@@ -152,24 +152,47 @@
 				});
 				
 				for (var i = 0; i < buildingMaterials.length; i++) {
-					var cube = new THREE.PlaneGeometry(50,30);		
-					var cubemesh = new THREE.Mesh( cube, buildingMaterials[i] );		
+					//var cube = new THREE.PlaneGeometry(50,30);		
+					//var cubemesh = new THREE.Mesh( cube, buildingMaterials[i] );		
+					
 					var ranchild = grp.children[Math.round(Math.random() * count)];
+					var myface = ranchild.geometry.faces[ranchild.geometry.faces.length - 1];
+					var mynormal = myface.normal;
 					
-					cubemesh.position.x = ranchild.geometry.vertices[0].x - 1000; //Math.random() * 1000 - 500;
-					cubemesh.position.y = ranchild.geometry.vertices[0].y - 1000;
-					cubemesh.position.z = 15;
+					var wallGeom = new THREE.Geometry();
+
+					wallGeom.vertices.push(ranchild.geometry.vertices[myface.a]);
+					wallGeom.vertices.push(ranchild.geometry.vertices[myface.b]);
+					wallGeom.vertices.push(ranchild.geometry.vertices[myface.c]);
+					wallGeom.vertices.push(ranchild.geometry.vertices[myface.d]);
 					
-					//cubemesh.rotation.z = Math.random();
-					cubemesh.rotation.x = -90 * Math.PI / 180;
+					var face = new THREE.Face4( 0, 1, 2, 3 );
+					face.normal.copy( mynormal );
+					face.vertexNormals.push( mynormal.clone(), mynormal.clone(), mynormal.clone(), mynormal.clone() );
+
+					wallGeom.faces.push( face );
 					
-					cubemesh.material.side = THREE.DoubleSide;
-					cubemesh.scale.y = -1;
+					var ix = 50, iy = 30, gridX = 1, gridY = 1;
+					wallGeom.faceVertexUvs[ 0 ].push( [
+						new THREE.Vector2( ix / gridX, iy / gridY ),
+						new THREE.Vector2( ix / gridX, ( iy + 1 ) / gridY ),
+						new THREE.Vector2( ( ix + 1 ) / gridX, ( iy + 1 ) / gridY ),
+						new THREE.Vector2( ( ix + 1 ) / gridX, iy / gridY )
+					] ); 
 					
-					grp.add(cubemesh); 
+					wallGeom.computeCentroids();
+
+					var avatar = new THREE.Mesh(wallGeom, buildingMaterials[i]);
+					avatar.doubleSided = true;
+					
+					avatar.position.x = -1000;
+					avatar.position.y = -1000;
+					
+					grp.add(avatar);
 				}
 				
 				scene.add(grp);
+				
 				//grp.rotation.z = 10 * Math.PI / 180;
 				grp.rotation.x = -90 * Math.PI / 180;
 				//grp.position.x -= 1000;
@@ -177,59 +200,6 @@
 				//grp.position.z += 5;
 				
 				//camera.lookAt( grp.position );
-				/*
-// world
-
-				var geometry = new THREE.CylinderGeometry( 0, 10, 30, 4, 1 );
-				var material =  new THREE.MeshLambertMaterial( { color:0xffffff, shading: THREE.FlatShading } );
-
-				for ( var i = 0; i < 500; i ++ ) {
-
-					var mesh = new THREE.Mesh( geometry, material );
-					mesh.position.x = ( Math.random() - 0.5 ) * 1000;
-					mesh.position.y = ( Math.random() - 0.5 ) * 1000;
-					mesh.position.z = ( Math.random() - 0.5 ) * 1000;
-					mesh.updateMatrix();
-					mesh.matrixAutoUpdate = false;
-					scene.add( mesh );
-
-				}
-*/
-/*
-				// Cube
-
-				var geometry = new THREE.CubeGeometry( 200, 200, 200 );
-
-				for ( var i = 0; i < geometry.faces.length; i ++ ) {
-
-					geometry.faces[ i ].color.setHex( Math.random() * 0xffffff );
-
-				}
-
-				var material; // = new THREE.MeshBasicMaterial( { vertexColors: THREE.FaceColors } );
-				
-				var texture = THREE.ImageUtils.loadTexture('images/IMAG010' + i + '.JPG', {}, function() {
-					renderer.render(scene, camera);
-				});
-
-				texture.needsUpdate = true;
-				
-				material = new THREE.MeshBasicMaterial( { map: texture } );
-
-				cube = new THREE.Mesh( geometry, material );
-				cube.position.y = 150;
-				scene.add( cube );
-
-				// Plane
-
-				var geometry = new THREE.PlaneGeometry( 200, 200 );
-				geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
-
-				var material = new THREE.MeshBasicMaterial( { color: 0xe0e0e0 } );
-
-				plane = new THREE.Mesh( geometry, material );
-				scene.add( plane );
-*/				
 
 				renderer = new THREE.WebGLRenderer();
 				renderer.setSize( window.innerWidth, window.innerHeight );

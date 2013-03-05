@@ -83,7 +83,7 @@
 
 				  for (var i = 0; i < 9; i++) {
 							
-					var texture = THREE.ImageUtils.loadTexture('http://opendata.utou.ch/threeffiti/images/IMAG010' + (i + 1) + '.JPG', {}, function() { renderer.render(scene, camera); });
+					var texture = THREE.ImageUtils.loadTexture('images/IMAG010' + (i + 1) + '.JPG', {}, function() { renderer.render(scene, camera); });
 					
 					//var texture = THREE.ImageUtils.loadTexture( "../../three.js/examples/textures/crate.gif" );
 
@@ -127,6 +127,7 @@
 */				
 					mesh.geometry.computeVertexNormals();
 					mesh.updateMatrix();
+					mesh.doubleSided = true;
 					mesh.matrixAutoUpdate = false;		
 					grp.add(mesh)
 				});
