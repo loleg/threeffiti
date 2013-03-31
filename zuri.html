@@ -18,6 +18,7 @@
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 		<script>window.jQuery || document.write('<script src="lib/jquery-1.9.1.min.js"><\/script>')</script>
 
+		<script src="lib/jquery/jquery.sparkline.min.js"></script>
 		<script src="js/color-picker.js"></script>
 
 		<style>
@@ -68,12 +69,19 @@
 		</style>
 	</head>
 	<body>
-	<div class="in">&nbsp;
+	<div class="in" style="z-index:1">&nbsp;
 		<div id="map"></div>
+		
 	</div>
-	<p>
+	<p style="z-index:-1">
 		<img src="threeffitti.png"><br/>
-		<br/>
+
+		zürich data: 
+		<a href="http://data.stadt-zuerich.ch/content/portal/de/index/ogd/daten/bevoelkerungsbestand_jahr_quartier_alter.html#download2">
+			population</a>
+		<a href="http://data.stadt-zuerich.ch/content/portal/de/index/ogd/daten/medianeinkommen_quartier.html#description1">
+			income</a>
+		<br/><br/>
 		<a href="index.html">intro</a>
 		<a href="links.html">links</a>
 		<a href="https://github.com/loleg/threeffiti">source</a>
@@ -88,10 +96,12 @@
 		key: 'e4a84fd1388c455e9777b4f0f83c800d'
 	}).addTo(map);
 
-	var colorRange = 20;
+	var colorRange = 100;
 	var colorPicker = new ColorPicker();
 	var colorPalette = colorPicker.genMultiHexArray(
-			[0xDADCD7, 0xD0BD04, 0x93406A, 0x45B6DC], colorRange);
+			[0x93406A, 0xD0BD04], colorRange);
+			//[0xDADCD7, 0xD0BD04, 0x93406A, 0x45B6DC], colorRange);
+			
 	var highlightStyle = {
 			color: "#000000",
 			fillColor: "#DDDDDD",
@@ -99,15 +109,21 @@
 	        opacity: 0.4,
 	        fillOpacity: 0.7
 		};
-	var getLayerStyle = function(percent) {
-		var hex = colorPalette[percent % colorRange];
+	var getLayerStyle = function(name) {
+		var data = getDataByName(name);
+		var hex;
+		if (data != null && typeof data.score != 'undefined') {
+			hex = colorPalette[parseInt(data.score)];
+		} else {
+			hex = colorPalette[0];
+		}
 		var str = colorPicker.hexToRGBstr(hex);
 		return {
 			color: "#000000",
 			fillColor: str,
             weight: 3,
             opacity: 0.4,
-            fillOpacity: 0.5
+            fillOpacity: 0.4
 		};
 	};
 	var popupStyle = {
@@ -116,10 +132,55 @@
         left: "50px",
         zIndex: 1002
     };
+    var sparklineStyle = {
+    	width: "74px"
+    };
+    
+    var economicData;
+    $.get('geo/trend_zurich_median_einkommen_stadtquartier_seit_2007.csv', function(allText) {
+		var allTextLines = allText.split(/\r\n|\n/);
+		var headers = allTextLines[0].split(',');
+		var lines = [];
+		for (var j=0; j<headers.length; j++) {
+            headers[j] = headers[j].replace('"', "");
+        }
+		for (var i=1; i<allTextLines.length; i++) {
+		    var data = allTextLines[i].split(',');
+		    if (data.length == headers.length && data[0] != "") {
+				var line = {};
+		        for (var j=0; j<headers.length; j++) {
+		            line[headers[j]] = data[j];
+		        }
+		        lines.push(line);
+		    }
+		}
+		//console.log(lines);
+		economicData = lines;
+    });
+    
+    function getDataByName(name) {
+    	for (i in economicData) {
+    		if (economicData[i].name == name) {
+    			return economicData[i];
+    		}
+    	}
+    	return null;
+    }
+    
     function getDistrictData(name) {
+    	var data = getDataByName(name);
+		if (data == null) return;
+		var trends = [];
+		for (var i = 2007; i <= 2012; i++) {
+			trends.push(data["med_inc" + i]);
+		}
+		trends = trends.join(",");
     	return '<div class="district schraeg">'
     		+ '<h5>' + name + '</h5><ul>'
-    		//+ '<li>' + 'population: 1232' + '</li>'
+    		+ '<li>' + 'population: ' + data.population + '</li>'
+    		+ '<li>' + 'income 2012: ' + data.med_inc2012 + '</li>'
+    		+ '<li>' + 'trend 2013: ' + data.trend + '</li>'
+    		+ '<li><span class="inlinesparkline">' + trends + '</span>'
     		+ '</ul></div>';
     }
 
@@ -129,15 +190,16 @@
 		}
 		L.geoJson(data.features, {
 			style: function(feature) {
-				console.log("Loaded " + feature.properties.name);
-				return getLayerStyle(feature.properties.cartodb_id);
+				//console.log(feature.properties);
+				// .name .cartodb_id
+				return getLayerStyle(feature.properties.name);
 			},
 			/*onEachFeature: function (feature, layer) {
 				layer.bindPopup(feature.properties.name);
 			},*/
 			onEachFeature: function(feature, layer) {
 	            // Load the default style. 
-	            layer.defaultStyle = getLayerStyle(feature.properties.cartodb_id);
+	            layer.defaultStyle = getLayerStyle(feature.properties.name);
 	            // Create a self-invoking function that passes in the layer
 	            // and the properties associated with this particular record.
 	            (function(layer, properties) {
@@ -154,6 +216,7 @@
 	                var hed = $(getDistrictData(properties.name)).appendTo(popup);
 	                // Add the popup to the map
 	                popup.appendTo("#map");
+	                $('.inlinesparkline', popup).sparkline('html',sparklineStyle); 
 	              });
 	              // Create a mouseout event that undoes the mouseover changes
 	              layer.on("click", function (e) {
