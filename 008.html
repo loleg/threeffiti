@@ -5,6 +5,10 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 
+		<script src="lib/raphael/raphael.js"></script>
+        <script src="lib/raphael/g.raphael-min.js"></script>
+        <script src="lib/raphael/g.dot.js"></script>
+
 		<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5/leaflet.css" />
 		<!--[if lte IE 8]>
 		<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5/leaflet.ie.css" />
@@ -28,7 +32,7 @@
 				background:#fff;
 				opacity:0.6;
 				width:100%;
-				min-height:440px;
+				min-height:540px;
 			}
 			img {
 				opacity:0.7;
@@ -42,29 +46,40 @@
 			}
 			a { color:white }
 			a:hover { color:blue }
-			#map { position:absolute; left:50%; margin-left:-300px; }
+			#map { 
+				position:absolute; 
+				top:0px;
+				left:50%; margin-left:-400px; 
+				width: 800px; height: 540px;
+			}
+			.schraeg {
+				-webkit-transform: rotate(-3deg);
+				-moz-transform: rotate(-3deg);
+				-ms-transform: rotate(-3deg);
+				-o-transform: rotate(-3deg);
+
+		        background: white;
+		        border: 10px solid #fff;
+			}
+			.district, .district * { padding:0; margin:0; }
+			.district h5 { font-size:20px; font-weight:bold; }
+			.district ul, .district li { list-style:none; }
 		</style>
 	</head>
 	<body>
 	<div class="in">&nbsp;
-		<div id="map" style="width: 600px; height: 400px"></div>
+		<div id="map"></div>
 	</div>
 	<p>
+		<img src="threeffitti.png"><br/>
 		<br/>
-		<a href="001.html" target="_blank">001</a>
-		<a href="002.html" target="_blank">002</a>
-		<a href="003.html" target="_blank">003</a>
-		<a href="004.html" target="_blank">004</a>
-		<a href="005.html" target="_blank">005</a>
-		<a href="006.html" target="_blank">006</a>
-		<a href="007.html" target="_blank">007</a>
 		<a href="links.html">links</a>
 		<a href="https://github.com/loleg/threeffiti">source</a>
 	</p>
 	
 	<script>
 
-	var map = L.map('map').setView([47.3690, 8.5380], 13);
+	var map = L.map('map').setView([47.3740, 8.5380], 12);
 
 	L.tileLayer('http://{s}.tile.cloudmade.com/{key}/91177/256/{z}/{x}/{y}.png', {
 		attribution: 'Map data &copy; 2011 OpenStreetMap contributors, Imagery &copy; 2012 CloudMade',
@@ -93,6 +108,18 @@
             fillOpacity: 0.5
 		};
 	};
+	var popupStyle = {
+        position: "absolute",
+        bottom: "125px",
+        left: "50px",
+        zIndex: 1002
+    };
+    function getDistrictData(name) {
+    	return '<div class="district schraeg">'
+    		+ '<h5>' + name + '</h5><ul>'
+    		+ '<li>' + 'population: 1232' + '</li>'
+    		+ '</ul></div>';
+    }
 
 	$.getJSON('geo/hoods/zurich-city.geojson', function(data) {
 		if (data.type !== "FeatureCollection") {
@@ -119,21 +146,10 @@
 	                // Create a popup with a unique ID linked to this record
 	                var popup = $("<div></div>", {
 	                    id: "popup-" + properties.name,
-	                    css: {
-	                        position: "absolute",
-	                        bottom: "85px",
-	                        left: "50px",
-	                        zIndex: 1002,
-	                        backgroundColor: "white",
-	                        padding: "8px",
-	                        border: "1px solid #ccc"
-	                    }
+	                    css: popupStyle
 	                });
 	                // Insert a headline into that popup
-	                var hed = $("<div></div>", {
-	                    text: "District " + properties.name,
-	                    css: {fontSize: "16px", marginBottom: "3px"}
-	                }).appendTo(popup);
+	                var hed = $(getDistrictData(properties.name)).appendTo(popup);
 	                // Add the popup to the map
 	                popup.appendTo("#map");
 	              });
@@ -142,7 +158,7 @@
 	                // Start by reverting the style back
 	                layer.setStyle(layer.defaultStyle); 
 	                // And then destroying the popup
-	                $("#popup-" + properties.name).remove();
+	                $("#popup-" + properties.name).hide().remove();
 	              });
 	              // Close the "anonymous" wrapper function, and call it while passing
 	              // in the variables necessary to make the events work the way we want.

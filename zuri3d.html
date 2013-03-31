@@ -23,7 +23,7 @@
 			.help {
 				position:absolute;
 				bottom:0px;
-				height:2em; width:100%;
+				height:3em; width:100%;
 				padding:0.5em;
 				font-family: Monospace;
 				background:#fff;
@@ -35,10 +35,11 @@
 		</style>
 	</head>
 	<body>
-		<div class="help">
-			<button class="close">&times;</button>
+		<div class="help" id="helpbox">
+			<button class="close" onclick="document.getElementById('helpbox').style.display = 'none';">&times;</button>
 			move your mouse to orient, click to fly forwards, right click
-			to fly backwards, reload the page if you get lost
+			to fly backwards, reload the page if you get lost. 
+			photos: <a href="http://www.zueri-graffiti.ch/">zueri-graffiti.ch</a>
 		</div>
 
 		<script src="lib/three/three.min.js"></script>
@@ -104,12 +105,14 @@
 				
 				pointLight = new THREE.PointLight( 0xffffff, 1 );
 				scene.add( pointLight );
+
+				scene.fog = new THREE.FogExp2(0xD6F1FF, 0.0005);
 				
 				// textures
 				
 				 var buildingMaterials = [];
 
-				  for (var i = 0; i < 12; i++) {
+				  for (var i = 0; i < 62; i++) {
 							
 					var texture = THREE.ImageUtils.loadTexture('images/IMAG00' + (i + 37) + '.JPG', {}, function() { renderer.render(scene, camera); });
 					
@@ -131,14 +134,14 @@
 				
 				// geometry
 				
-				var extrudeSettings = {	amount: 10, bevelEnabled: false }; 
+				var extrudeSettings = {	amount: 5, bevelEnabled: false }; 
 				var count = 0;
 				var ix = 0;
 				
 				$('g path', data).each(function() {
 					count++;
 					
-					extrudeSettings.amount = $(this).attr('d').length / 4;
+					extrudeSettings.amount = 20; //$(this).attr('d').length / 4;
 									
 					var g = new THREE.ExtrudeGeometry( 
 							transformSVGPath( $(this).attr('d') ), 
