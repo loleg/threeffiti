@@ -4,11 +4,11 @@
 		<title>threeffiti</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-
+<!--
 		<script src="lib/raphael/raphael.js"></script>
         <script src="lib/raphael/g.raphael-min.js"></script>
         <script src="lib/raphael/g.dot.js"></script>
-
+-->
 		<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5/leaflet.css" />
 		<!--[if lte IE 8]>
 		<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5/leaflet.ie.css" />
@@ -60,9 +60,10 @@
 
 		        background: white;
 		        border: 10px solid #fff;
+		        box-shadow: 3px 3px 10px #888;
 			}
-			.district, .district * { padding:0; margin:0; }
-			.district h5 { font-size:20px; font-weight:bold; }
+			.district, .district * { padding:0; margin:0; font-family: Monospace; }
+			.district h5 { font-size:20px; font-weight:bold;  }
 			.district ul, .district li { list-style:none; }
 		</style>
 	</head>
@@ -73,6 +74,7 @@
 	<p>
 		<img src="threeffitti.png"><br/>
 		<br/>
+		<a href="index.html">intro</a>
 		<a href="links.html">links</a>
 		<a href="https://github.com/loleg/threeffiti">source</a>
 	</p>
@@ -117,7 +119,7 @@
     function getDistrictData(name) {
     	return '<div class="district schraeg">'
     		+ '<h5>' + name + '</h5><ul>'
-    		+ '<li>' + 'population: 1232' + '</li>'
+    		//+ '<li>' + 'population: 1232' + '</li>'
     		+ '</ul></div>';
     }
 
@@ -145,7 +147,7 @@
 	                layer.setStyle(highlightStyle);
 	                // Create a popup with a unique ID linked to this record
 	                var popup = $("<div></div>", {
-	                    id: "popup-" + properties.name,
+	                    id: "popup-" + properties.name.replace(" ", ""),
 	                    css: popupStyle
 	                });
 	                // Insert a headline into that popup
@@ -154,11 +156,15 @@
 	                popup.appendTo("#map");
 	              });
 	              // Create a mouseout event that undoes the mouseover changes
+	              layer.on("click", function (e) {
+	                window.open('zuri3d.html?q=' + properties.name,'Zuri3d','height=500,width=800'); 
+	              });
+	              // Create a mouseout event that undoes the mouseover changes
 	              layer.on("mouseout", function (e) {
 	                // Start by reverting the style back
 	                layer.setStyle(layer.defaultStyle); 
 	                // And then destroying the popup
-	                $("#popup-" + properties.name).hide().remove();
+	                $("#popup-" + properties.name.replace(" ", "")).hide().remove();
 	              });
 	              // Close the "anonymous" wrapper function, and call it while passing
 	              // in the variables necessary to make the events work the way we want.

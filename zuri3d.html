@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<title></title>
+		<title>Enge - threeffitti</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 		<style>
@@ -37,8 +37,7 @@
 	<body>
 		<div class="help" id="helpbox">
 			<button class="close" onclick="document.getElementById('helpbox').style.display = 'none';">&times;</button>
-			move your mouse to orient, click to fly forwards, right click
-			to fly backwards, reload the page if you get lost. 
+			move mouse to turn, click to fly, right click backwards. 
 			photos: <a href="http://www.zueri-graffiti.ch/">zueri-graffiti.ch</a>
 		</div>
 
@@ -88,7 +87,7 @@
 				
 				camera.position.set( 225.2092417435682, 61.83116926590768, -152.83859440232902);
 				
-				grp = new THREE.Object3D();
+				mergedGeo = new THREE.Geometry();
 				
 				//controls = new THREE.OrbitControls( camera );
 				//controls.addEventListener( 'change', render );
@@ -109,23 +108,32 @@
 				scene.fog = new THREE.FogExp2(0xD6F1FF, 0.0005);
 				
 				// textures
-				
-				 var buildingMaterials = [];
-
-				  for (var i = 0; i < 62; i++) {
-							
-					var texture = THREE.ImageUtils.loadTexture('images/IMAG00' + (i + 37) + '.JPG', {}, function() { renderer.render(scene, camera); });
-					
-					//var texture = THREE.ImageUtils.loadTexture( "../../three.js/examples/textures/crate.gif" );
+				function pad(num, size) {
+					var s = "000000000" + num;
+					return s.substr(s.length-size);
+				}
+				function addWall(i) {
+				  	if (ignoreMaterials.indexOf(i) != -1) return;
+						
+					var texture = THREE.ImageUtils.loadTexture(
+						'images/zurich/IMAG' + pad(i,4)  + '.JPG', {}, 
+						function() { renderer.render(scene, camera); });
 
 					texture.needsUpdate = true;
-					
+				
 					//texture.repeat.x = 0.01;
 					//texture.repeat.y = 0.01;
-		
+	
 					buildingMaterials.push(new THREE.MeshLambertMaterial( { map: texture } ));
 					//buildingMaterials.push(new THREE.MeshPhongMaterial( { color: buildingColor.getHex(), map: texture } ));
-				  }
+				}
+
+				var buildingMaterials = [];
+				var ignoreMaterials = [1,2,4,7,9,10,12,16,18,19,26,27,41,44,47,52,53,54,61,67,73,74,87,88,90,91,92,93,94,95,101,105,107,108,123];
+				
+				for (var i = 1; i < 27; i++) { addWall(i); }
+				for (var i = 37; i < 98; i++) { addWall(i); }
+				for (var i = 101; i < 123; i++) { addWall(i); }
 				
 				var greyMaterial = [];
 				greyMaterial.push(new THREE.MeshLambertMaterial( { color: 0x33595B, shading: THREE.FlatShading } ));
@@ -136,7 +144,6 @@
 				
 				var extrudeSettings = {	amount: 5, bevelEnabled: false }; 
 				var count = 0;
-				var ix = 0;
 				
 				$('g path', data).each(function() {
 					count++;
@@ -149,39 +156,6 @@
 					
 					if (typeof g == 'undefined') return;
 					if (typeof g.faces == 'undefined') return;
-					
-					var tex;
-					
-					for ( var i = 0; i < g.faces.length; i++ ) {
-						if (typeof g.faces[i].d == 'undefined') {
-							g.faces[i].materialIndex = 0;
-						} else if (i % 12 == 0) {
-							g.faces[i].materialIndex = 3;
-						} else if (i % 8 == 0) {
-							g.faces[i].materialIndex = 2;
-						} else if (i % 4 == 0) {
-							g.faces[i].materialIndex = 1;
-						} else {
-							g.faces[i].materialIndex = 0;
-						}
-					}
-
-					/*
-					myface = g.faces[g.faces.length-1];
-					if (typeof myface != 'undefined') {
-						myface.materialIndex = 1;
-					}
-					*/
-					
-					var imageMaterial = [];
-					for (var i = 0; i < 3; i++) {
-						imageMaterial[i] = ix;
-						if (++ix >= buildingMaterials.length) { ix = 0; }
-					}
-					
-					var concrete = greyMaterial[count % greyMaterial.length];
-					
-					tex = new THREE.MeshFaceMaterial( [ concrete, buildingMaterials[imageMaterial[0]], buildingMaterials[imageMaterial[1]], buildingMaterials[imageMaterial[2]] ] );
 					
 					g.computeFaceNormals();
 					g.computeVertexNormals( false );
@@ -202,55 +176,40 @@
 						g.faceVertexUvs[0].push(faceuv);
 					}
 					
-					var mesh = new THREE.Mesh( g, tex );
+					var mesh = new THREE.Mesh( g, new THREE.MeshBasicMaterial() );
 					//var mesh = new THREE.Mesh(new THREE.CubeGeometry(300, 300, 300), tex);
 					mesh.position.x -= 1000;
 					mesh.position.y -= 1000;
 					//mesh.doubleSided = true;
 												
-					grp.add(mesh)
+					THREE.GeometryUtils.merge(mergedGeo, mesh);
 				});
-				/*
-				for (var i = 0; i < buildingMaterials.length; i++) {
-					//var cube = new THREE.PlaneGeometry(50,30);		
-					//var cubemesh = new THREE.Mesh( cube, buildingMaterials[i] );		
-					
-					var ranchild = grp.children[Math.round(Math.random() * count)];
-					var myface = ranchild.geometry.faces[ranchild.geometry.faces.length - 1];
-					var mynormal = myface.normal;
-					
-					var wallGeom = new THREE.Geometry();
-
-					wallGeom.vertices.push(ranchild.geometry.vertices[myface.a]);
-					wallGeom.vertices.push(ranchild.geometry.vertices[myface.b]);
-					wallGeom.vertices.push(ranchild.geometry.vertices[myface.c]);
-					wallGeom.vertices.push(ranchild.geometry.vertices[myface.d]);
-					
-					var face = new THREE.Face4( 0, 1, 2, 3 );
-					face.normal.copy( mynormal );
-					face.vertexNormals.push( mynormal.clone(), mynormal.clone(), mynormal.clone(), mynormal.clone() );
-
-					wallGeom.faces.push( face );
-					
-					var ix = 50, iy = 30, gridX = 1, gridY = 1;
-					wallGeom.faceVertexUvs[ 0 ].push( [
-						new THREE.Vector2( ix / gridX, iy / gridY ),
-						new THREE.Vector2( ix / gridX, ( iy + 1 ) / gridY ),
-						new THREE.Vector2( ( ix + 1 ) / gridX, ( iy + 1 ) / gridY ),
-						new THREE.Vector2( ( ix + 1 ) / gridX, iy / gridY )
-					] ); 
-					
-					wallGeom.computeCentroids();
-
-					var avatar = new THREE.Mesh(wallGeom, buildingMaterials[i]);
-					avatar.doubleSided = true;
-					
-					avatar.position.x = -1000;
-					avatar.position.y = -1000;
-					
-					grp.add(avatar);
+				
+				// Create textures for faces
+				function getTexForGeo(g) {
+					var tex = [];
+					for ( var m in greyMaterial ) { 
+						tex.push(greyMaterial[m]);
+					}
+					for ( var m in buildingMaterials ) {
+						tex.push(buildingMaterials[m]);
+					}
+					var ix = tex.length;
+					// Cycle through all faces and assign maps
+					for ( var i = 0; i < g.faces.length; i++ ) {
+						if (typeof g.faces[i].d == 'undefined') {
+							g.faces[i].materialIndex = 0;
+						} else if (i % 5 == 0) {
+							// Apply texture to every Nth face
+							if (++ix >= tex.length) { ix = greyMaterial.length + 1; }
+							g.faces[i].materialIndex = ix;
+						}
+					}
+					return new THREE.MeshFaceMaterial( tex );
 				}
-				*/
+				
+				var grp = new THREE.Mesh(mergedGeo, getTexForGeo(mergedGeo));
+
 				scene.add(grp);
 				
 				//grp.rotation.z = 10 * Math.PI / 180;
