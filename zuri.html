@@ -184,6 +184,24 @@
     		+ '<li><span class="inlinesparkline">' + trends + '</span>'
     		+ '</ul></div>';
     }
+    
+    $.getJSON('geo/hoods/schweiz-walls.json', function(data) {
+    	
+		var sprayIcon = new L.Icon({
+				iconUrl: 'images/spraycan.png',
+				iconSize:     [16, 24]
+			});
+		
+    	for (i in data) {
+    		var w = data[i].wall; 
+    		if (typeof w == 'undefined') { return alert("Error"); }
+    		var lat = parseFloat(w.lat),
+    		    lng = parseFloat(w.lng),
+    		    txt = w.title + "\n" + w.address;
+    		L.marker([lat, lng], {icon: sprayIcon}).bindPopup(txt).addTo(map);
+    	}
+    	
+    });
 
 	$.getJSON('geo/hoods/zurich-city.geojson', function(data) {
 		if (data.type !== "FeatureCollection") {
