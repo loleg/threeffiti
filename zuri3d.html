@@ -44,6 +44,7 @@
 		<script src="lib/three/three.min.js"></script>
 		<script src="lib/three/libs/stats.min.js"></script>
 		<script src="lib/three/controls/FirstPersonControls.js"></script>
+		<script src="lib/three/Detector.js"></script>
 		
 		<script src="lib/d3/d3-threeD.js"></script>
 		
@@ -51,6 +52,8 @@
 		<script>window.jQuery || document.write('<script src="lib/jquery-1.9.1.min.js"><\/script>')</script>
 		
 		<script>
+		
+			if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 
 			var container, stats;
 
