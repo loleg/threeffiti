@@ -53,16 +53,29 @@
 				left:50%; margin-left:-400px; 
 				width: 800px; height: 540px;
 			}
-			.schraeg {
+			
+			.schraeg,.legend {
+				background: white;
+		        border: 10px solid #fff;
+		        box-shadow: 3px 3px 10px #888;
+		        
 				-webkit-transform: rotate(-3deg);
 				-moz-transform: rotate(-3deg);
 				-ms-transform: rotate(-3deg);
 				-o-transform: rotate(-3deg);
-
-		        background: white;
-		        border: 10px solid #fff;
-		        box-shadow: 3px 3px 10px #888;
 			}
+			.legend {				
+				position:absolute;
+				top:30px;
+				right:30px;
+				z-index:101;
+				
+				-webkit-transform: rotate(3deg);
+				-moz-transform: rotate(3deg);
+				-ms-transform: rotate(3deg);
+				-o-transform: rotate(3deg);
+			}
+				
 			.district, .district * { padding:0; margin:0; font-family: Monospace; }
 			.district h5 { font-size:20px; font-weight:bold;  }
 			.district ul, .district li { list-style:none; }
@@ -70,9 +83,16 @@
 	</head>
 	<body>
 	<div class="in" style="z-index:1">&nbsp;
-		<div id="map"></div>
-		
+		<div id="map">
+			<div class="legend">
+				<p><div class="swatch" style="background:#93406A">&nbsp;</div> Slowest</p>
+				<p><div class="swatch" style="background:#D0BD04">&nbsp;</div> Trendiest</p>
+				<p><div class="spraycan"><img src="images/spraycan.png"/></div> Legal wall</p>
+			</div>
+		</div>
 	</div>
+	
+	
 	<p style="z-index:-1">
 		<img src="threeffitti.png"><br/>
 
@@ -86,6 +106,7 @@
 		<a href="http://www.legal-walls.net/">
 			legal-walls</a>
 		<br/><br/>
+		&lt;&lt; 
 		<a href="index.html">intro</a>
 		<a href="links.html">links</a>
 		<a href="https://github.com/loleg/threeffiti">source</a>
@@ -181,10 +202,10 @@
 		trends = trends.join(",");
     	return '<div class="district schraeg">'
     		+ '<h5>' + name + '</h5><ul>'
-    		+ '<li>' + 'population: ' + data.population + '</li>'
-    		+ '<li>' + data.population_u20 + ' under 20</li>'
-    		+ '<li>' + 'income 2012: ' + data.med_inc2012 + '</li>'
-    		+ '<li>' + 'trend 2013: ' + data.trend + '</li>'
+    		+ '<li>' + 'population: <b>' + data.population + '</b></li>'
+    		+ '<li><b>' + data.population_u20 + '</b> are under 20</li>'
+    		+ '<li>' + 'income 2012: <b>' + data.med_inc2012 + '</b></li>'
+    		+ '<li>' + 'trend 2013: <b>' + data.trend + '</b></li>'
     		+ '<li><span class="inlinesparkline">' + trends + '</span>'
     		+ '</ul></div>';
     }

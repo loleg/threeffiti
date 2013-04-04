@@ -54,8 +54,8 @@
 			.menu a:hover { color:black; }
 			.menu li { width:12em; float:left; list-style:none; padding:0 2em; border-right:1px dashed #777; }
 			.menu li:last-child { border:none; }
-			.menu .title { font-size:160%; font-weight:bold; }
-			.menu .disabled a { color:#999; }
+			.menu .title { font-size:160%; font-weight:bold; color:#33c; border-bottom:1px dashed #33c; display:inline; padding-bottom:0; line-height:1.6em; }
+			.menu a.disabled { color:#999; }
 			.menu pic { width:24px; height:22px; display:inline-block; clear:none; }
 			.manwoman { background:url(images/manwoman.png) no-repeat 50%; }
 			.shower { background:url(images/shower.png) no-repeat -5px 50%; }
@@ -73,13 +73,13 @@
 			<a class="spend" href="http://www.20min.ch/news/zuerich/story/25033247" target="_blank"><pic class="shower"/>&nbsp;&nbsp; CHF 3 M/year</a>
 		</li>
 		<li>
-			<a class="title" href="#" onclick="alert('Zuri only at the moment..')">Geneva</a>
+			<a class="title disabled" href="#" onclick="alert('Zuri only at the moment..')">Geneva</a>
 			<a class="spend" href="http://en.wikipedia.org/wiki/Geneva" target="_blank"><pic class="manwoman"/>&nbsp;&nbsp; 192,385</a>
 			<a class="spend" href="http://en.wikipedia.org/wiki/Geneva" target="_blank"><pic class="globe"/>&nbsp;&nbsp; 15.93 km²</a>
 			<a class="spend" href="http://www.ville-geneve.ch/administration-municipale/departement-environnement-urbain-securite/services-municipaux/voirie-ville-propre/" target="_blank"><pic class="shower"/>&nbsp;&nbsp; ?</a>
 		</li>
 		<li>
-			<a class="title" href="#" onclick="if (window.confirm('This site only has Zuri data at the moment, but would you like to go see a map of 311 graffiti reports in San Francisco?')) document.location.href = 'https://data.sfgov.org/Service-Requests-311-/SF-Graffiti-Map/9x98-sgi6';">San Francisco</a>
+			<a class="title disabled" href="#" onclick="if (window.confirm('This site only has Zuri data at the moment, but would you like to go see a map of 311 graffiti reports in San Francisco?')) document.location.href = 'https://data.sfgov.org/Service-Requests-311-/SF-Graffiti-Map/9x98-sgi6';">San Francisco</a>
 			<a class="spend" href="http://en.wikipedia.org/wiki/San_Francisco" target="_blank"><pic class="manwoman"/>&nbsp;&nbsp; 812,826</a>
 			<a class="spend" href="http://en.wikipedia.org/wiki/San_Francisco" target="_blank"><pic class="globe"/>&nbsp;&nbsp; 600.6 km²</a>
 			<a class="spend" href="http://www.sfdpw.org/index.aspx?page=1099" target="_blank"><pic class="shower"/>&nbsp;&nbsp; $20 M/year</a>
@@ -90,6 +90,9 @@
 	<div class="in">
 	This project aims to quantify how graffiti imposes itself on the urban environment,
 	an attempt to study underground culture using open data.
+	<b>How to:</b> click on the name of a city above, you will see a map of the terrain.
+	Click on any of the 'hoods to open a 3D visualization featuring sample graffiti from the area.
+	<b>Background:</b>
 	With analytics and computer graphics we can juxtapose neighbourhood characteristics with
 	diverse street styles. Public administrations &amp; business in our cities wage a
 	constant, expensive battle to protect buildings from unwanted manifestations.
@@ -98,7 +101,7 @@
 	This experiment is an <a href="http://www.urbandatachallenge.org">Urban Data Challenge</a> prototype,
 	that with time could become a virtual gallery, a multifaceted data visualization, a shared online experience.
 	This site does not endorse illegal spraying:
-	visit <a href="http://www.legal-walls.net/">legal walls</a> for a peaceful alternative.
+	visit <a href="http://www.legal-walls.net/">legal walls</a> for peaceful alternatives.
 	<em><a href="mailto:ask@utou.ch">\Ø</a></em>
 	</div>
 	
