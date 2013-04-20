@@ -25,10 +25,10 @@
 			body {
 				font-family: Monospace; font-size:140%;
 				margin: 0px;
-				overflow: hidden;
-				background: #C0CCC6;
+				background: #909994;
 				background-size: 100%;
 			}
+			.ghost { position:absolute; }
 			.in {
 				background:#fff;
 				opacity:0.6;
@@ -40,7 +40,6 @@
 			}
 			p {
 				text-align:center;
-				position:absolute;
 				bottom:1em;
 				width:100%;
 				text-shadow: 0.1em 0.1em #333;
@@ -52,6 +51,7 @@
 				top:0px;
 				left:50%; margin-left:-400px; 
 				width: 800px; height: 540px;
+				border-left:6px solid #999;
 			}
 			
 			.schraeg,.legend {
@@ -82,6 +82,8 @@
 		</style>
 	</head>
 	<body>
+	<h1 class="ghost">Zürich<br>Urban<br>Map</h1>
+	
 	<div class="in" style="z-index:1">&nbsp;
 		<div id="map">
 			<div class="legend">
@@ -94,22 +96,27 @@
 	
 	
 	<p style="z-index:-1">
-		<img src="threeffitti.png"><br/>
+		<!--<img src="threeffitti.png"><br/>-->
 
-		zürich data: 
+		data sources: 
 		<a href="http://data.stadt-zuerich.ch/content/portal/de/index/ogd/daten/bevoelkerungsbestand_jahr_quartier_alter.html#download2">
 			population</a>
 		<a href="http://data.stadt-zuerich.ch/content/portal/de/index/ogd/daten/medianeinkommen_quartier.html#description1">
 			income</a>
-		<a href="https://github.com/swissnexSF/Urban-Data-Challenge/tree/master/public-transportation/zurich/geo">
-			geojson</a>
 		<a href="http://www.legal-walls.net/">
 			legal-walls</a>
+		<a href="https://www.zueriwieneu.ch">
+			zueriwieneu</a>
+		<a href="https://github.com/swissnexSF/Urban-Data-Challenge/tree/master/public-transportation/zurich/geo">
+			geojson</a>
+		<a href="http://leafletjs.com/">
+			map</a>
 		<br/><br/>
 		&lt;
 		<a href="index.html">intro</a>
 		<a href="links.html">links</a>
 		<a href="https://github.com/loleg/threeffiti">source</a>
+		&gt;
 	</p>
 	
 	<script>
@@ -148,7 +155,7 @@
 			fillColor: str,
             weight: 3,
             opacity: 0.4,
-            fillOpacity: 0.4
+            fillOpacity: 0.9
 		};
 	};
 	var popupStyle = {
@@ -211,7 +218,6 @@
     }
     
     $.getJSON('geo/hoods/schweiz-walls.json', function(data) {
-    	
 		var sprayIcon = new L.Icon({
 				iconUrl: 'images/spraycan.png',
 				iconSize:     [16, 24]
@@ -225,9 +231,26 @@
     		    txt = w.title + "\n" + w.address;
     		L.marker([lat, lng], {icon: sprayIcon}).bindPopup(txt).addTo(map);
     	}
-    	
     });
-
+    
+    // Retrieved from https://www.zueriwieneu.ch/open311/v2/requests.json?jurisdiction_id=fiksgatami.no&service_code=Graffiti
+	$.getJSON('geo/hoods/zurich-graffiti-requests.json', function(data) {
+		var icon = new L.Icon({
+				iconUrl: 'images/alert.png',
+				iconSize:     [24, 24]
+			});
+		
+		if (typeof data.requests == 'undefined' || data.requests.length == 0) return alert("Error loading requests");
+		
+    	for (i in data.requests[0].request) {
+    		var w = data.requests[0].request[i]; 
+    		var lat = parseFloat(w.lat[0]),
+    		    lng = parseFloat(w.long[0]),
+    		    txt = w.detail[0];
+    		L.marker([lat, lng], {icon: icon}).bindPopup(txt).addTo(map);
+    	}
+    });
+    
 	$.getJSON('geo/hoods/zurich-city.geojson', function(data) {
 		if (data.type !== "FeatureCollection") {
 			alert('Invalid geojson'); return;
