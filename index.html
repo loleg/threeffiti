@@ -1,118 +1,311 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<title>threeffitti</title>
+		<title>cividi.tech</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 		<style>
 			body {
-				font-family: Monospace; font-size:140%;
-				background: #C0CCC6 url(home.jpg) no-repeat top left;
-				background-size: 100%;
-				margin:0; padding:0;
+				font-family: Monospace;
+				background-color: #f0f0f0;
+				margin: 0px;
+				overflow: hidden;
+
+				background: #212124; /* Old browsers */
+				background: -moz-linear-gradient(top,  #212124 0%, #e1d133 36%, #aa0552 66%, #000001 100%); /* FF3.6+ */
+				background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#212124), color-stop(36%,#e1d133), color-stop(66%,#aa0552), color-stop(100%,#000001)); /* Chrome,Safari4+ */
+				background: -webkit-linear-gradient(top,  #212124 0%,#e1d133 36%,#aa0552 66%,#000001 100%); /* Chrome10+,Safari5.1+ */
+				background: -o-linear-gradient(top,  #212124 0%,#e1d133 36%,#aa0552 66%,#000001 100%); /* Opera 11.10+ */
+				background: -ms-linear-gradient(top,  #212124 0%,#e1d133 36%,#aa0552 66%,#000001 100%); /* IE10+ */
+				background: linear-gradient(to bottom,  #212124 0%,#e1d133 36%,#aa0552 66%,#000001 100%); /* W3C */
+				filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#212124', endColorstr='#000001',GradientType=0 ); /* IE6-9 */
 			}
-			img {
-				opacity:0.7;
-			}
-			a { color:white }
-			a:hover { color:blue }
-			
-			.links {
-				text-align:center;
-				width:100%;
-				text-shadow: 0.1em 0.1em #333;
-			}
-			
-			.in {
+			.help {
+				position:absolute;
+				bottom:0px;
+				height:3em; width:100%;
+				padding:0.5em;
+				font-family: Monospace;
 				background:#fff;
 				opacity:0.8;
 				color:#000;
+				font-weight:bold;
 				font-size:90%;
-				padding:2em;
-				margin:0;
 			}
-			.in a {
-				color:black;
-			}
-			.in em {
-				font-style: normal;
-				background: #ec9;
-			}
-			
-			.menu-container { margin-bottom:20%;text-align:center }
-			.menu {
-				background:#fff;
-				border-radius:4em;
-				padding:1em;
-				display:inline-block;
-				opacity:0.8;
-				list-style:none;
-				text-align:left;
-				z-index:100;
-			}
-			.menu a { white-space:nowrap; color:#444; text-decoration:none; display:block; clear:both; }
-			.menu a:hover { color:black; }
-			.menu li { width:12em; float:left; list-style:none; padding:0 2em; border-right:1px dashed #777; }
-			.menu li:last-child { border:none; }
-			.menu .title { font-size:160%; font-weight:bold; color:#33c; border-bottom:1px dashed #33c; display:inline; padding-bottom:0; line-height:1.6em; }
-			.menu a.disabled { color:#999; }
-			.menu pic { width:24px; height:22px; display:inline-block; clear:none; }
-			.manwoman { background:url(images/manwoman.png) no-repeat 50%; }
-			.shower { background:url(images/shower.png) no-repeat -5px 50%; }
-			.globe { background:url(images/globe.png) no-repeat -9px 50%; }
 		</style>
 	</head>
 	<body>
-	<div class="menu-container">
-	
-	<ul class="menu">
-		<li>
-			<a class="title" href="zuri.html">Zurich</a>
-			<a class="spend" href="http://en.wikipedia.org/wiki/Zurich" target="_blank"><pic class="manwoman"/>&nbsp;&nbsp; 376,008</a>
-			<a class="spend" href="http://en.wikipedia.org/wiki/Zurich" target="_blank"><pic class="globe"/>&nbsp;&nbsp; 87.88 km²</a>
-			<a class="spend" href="http://www.20min.ch/news/zuerich/story/25033247" target="_blank"><pic class="shower"/>&nbsp;&nbsp; CHF 3 M/year</a>
-		</li>
-		<li>
-			<a class="title disabled" href="#" onclick="alert('Zuri only at the moment..')">Geneva</a>
-			<a class="spend" href="http://en.wikipedia.org/wiki/Geneva" target="_blank"><pic class="manwoman"/>&nbsp;&nbsp; 192,385</a>
-			<a class="spend" href="http://en.wikipedia.org/wiki/Geneva" target="_blank"><pic class="globe"/>&nbsp;&nbsp; 15.93 km²</a>
-			<a class="spend" href="http://www.ville-geneve.ch/administration-municipale/departement-environnement-urbain-securite/services-municipaux/voirie-ville-propre/" target="_blank"><pic class="shower"/>&nbsp;&nbsp; ?</a>
-		</li>
-		<li>
-			<a class="title disabled" href="#" onclick="if (window.confirm('This site only has Zuri data at the moment, but would you like to go see a map of 311 graffiti reports in San Francisco?')) document.location.href = 'https://data.sfgov.org/Service-Requests-311-/SF-Graffiti-Map/9x98-sgi6';">San Francisco</a>
-			<a class="spend" href="http://en.wikipedia.org/wiki/San_Francisco" target="_blank"><pic class="manwoman"/>&nbsp;&nbsp; 812,826</a>
-			<a class="spend" href="http://en.wikipedia.org/wiki/San_Francisco" target="_blank"><pic class="globe"/>&nbsp;&nbsp; 600.6 km²</a>
-			<a class="spend" href="http://www.sfdpw.org/index.aspx?page=1099" target="_blank"><pic class="shower"/>&nbsp;&nbsp; $20 M/year</a>
-		</li>
-	</ul>
-	</div>
-	
-	<div class="in">
-	This project aims to quantify how graffiti imposes itself on the urban environment,
-	an attempt to study underground culture using open data.
-	<b>How to:</b> click on the name of a city above, you will see a map of the terrain 
-	showing economic trendiness (5 year growth) and youth population.
-	Click on any of the 'hoods to open a 3D visualization featuring sample graffiti from the area.
-	This requires <a href="http://get.webgl.org/">a modern browser</a> and 3D accelerator.
-	<b>Background:</b>
-	With analytics and computer graphics we can juxtapose neighbourhood characteristics with
-	diverse street styles. Public administrations &amp; business in our cities wage a
-	constant, expensive battle to protect buildings from unwanted manifestations.
-	However, it is difficult to get a good high level view of what is going on: there are
-	few statistics and studies, or if they exist they are not yet public.
-	By exploring the problem openly, we may find new opportunities.
-	<b>Important:</b> this site does not endorse illegal spraying:
-	visit <a href="http://www.legal-walls.net/">legal walls</a> for peaceful alternatives.
-	<a style="color:#fc3" href="mailto:info@jouda.cc">\Ø</a>
-	</div>
-	
-	<p class="links">
-	<img src="threeffitti.png"><br/>	
-	<a href="links.html">links</a>
-	<a href="https://github.com/loleg/threeffiti">source</a>
-	<a href="https://twitter.com/share" class="twitter-share-button" data-via="loleg">tweet</a>
-	</p>
-	
-	<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+		<div class="help" id="helpbox" style="font-weight: normal">
+			<button class="close" onclick="document.getElementById('helpbox').style.display = 'none';">&times;</button>
+			<a style="float:right;margin-right:2em" href="mailto:info@smartuse.ch">info @</a>
+			<b>WASD</b> move, <b>R F</b> vertical, <b>Q E</b> roll, <b> ↑ ↓ ← →</b> pitch/yaw
+		</div>
+		</div>
+
+		<script src="https://fastcdn.org/three.js/73/three.min.js"></script>
+
+		<script src="lib/three/three.min.js"></script>
+		<script src="lib/three/libs/stats.min.js"></script>
+		<!-- <script src="lib/three/controls/FirstPersonControls.js"></script> -->
+		<script src="lib/three/controls/FlyControls.js"></script>
+		<script src="lib/three/Detector.js"></script>
+
+		<script src="lib/d3/d3-threeD.js"></script>
+
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+		<script>window.jQuery || document.write('<script src="lib/jquery-1.9.1.min.js"><\/script>')</script>
+
+		<script>
+
+			if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
+
+			var container, stats;
+
+			var camera, controls, scene, renderer;
+
+			var cube, plane, grp;
+
+			var targetRotation = 0;
+			var targetRotationOnMouseDown = 0;
+
+			var mouseX = 0;
+			var mouseXOnMouseDown = 0;
+
+			var windowHalfX = window.innerWidth / 2;
+			var windowHalfY = window.innerHeight / 2;
+
+			var clock = new THREE.Clock();
+
+			$.get('geo/zuri.svg', function(data) {
+
+				init(data);
+				animate();
+
+			});
+
+			function init(data) {
+
+				container = document.createElement( 'div' );
+				document.body.appendChild( container );
+
+				camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 2000 );
+				// camera.position.set( -15.5868665338305465, -3.712257779438737, 0.07787497775670281 );
+				// camera.position.set( 225.2092417435682, 61.83116926590768, -152.83859440232902);
+
+				mergedGeo = new THREE.Geometry();
+
+				//controls = new THREE.OrbitControls( camera );
+				//controls.addEventListener( 'change', render );
+
+				controls = new THREE.FlyControls( camera );
+
+				controls.movementSpeed = 200;
+				controls.domElement = container;
+				controls.rollSpeed = Math.PI / 24;
+				controls.autoForward = false;
+				controls.dragToLook = true;
+
+				// camera.position.set(830, 200, 1130);
+				camera.position.set( 913.9552366535341,  499.36412579516565, 123.21328055972106);
+				camera.quaternion.x = -0.6815568660034912;
+				camera.quaternion.y = -0.020825725637980123;
+				camera.quaternion.z = -0.010028043027656117;
+				camera.quaternion.w = 0.7314000040388811;
+
+				scene = new THREE.Scene();
+
+				// lights
+
+				scene.add( new THREE.AmbientLight( 0x111111 ) );
+
+				pointLight = new THREE.PointLight( 0xffffff, 10 );
+				pointLight.position.set(1000, 0, -1000);
+				scene.add( pointLight );
+				scene.add( new THREE.PointLight( 0xffffff, 2 ) );
+
+				scene.fog = new THREE.FogExp2(0xD6F1FF, 0.0005);
+
+				// textures
+				function pad(num, size) {
+					var s = "000000000" + num;
+					return s.substr(s.length-size);
+				}
+				function addWall(i) {
+				  	if (ignoreMaterials.indexOf(i) != -1) return;
+
+					var texture = THREE.ImageUtils.loadTexture(
+						'images/zurich/IMAG' + pad(i,4)  + '.JPG', {},
+						function() { renderer.render(scene, camera); });
+
+					texture.needsUpdate = true;
+
+					texture.repeat.x = 1;
+					texture.repeat.y = 0.01;
+					// texture.repeat = THREE.RepeatWrapping;
+
+					buildingMaterials.push(new THREE.MeshLambertMaterial( { map: texture } ));
+					//buildingMaterials.push(new THREE.MeshPhongMaterial( { color: buildingColor.getHex(), map: texture } ));
+				}
+
+				var buildingMaterials = [];
+				var ignoreMaterials = [1,2,4,7,9,10,12,16,18,19,26,27,41,44,47,52,53,54,61,67,73,74,87,88,90,91,92,93,94,95,101,105,107,108,123];
+
+				for (var i = 1; i < 27; i++) { addWall(i); }
+				for (var i = 37; i < 98; i++) { addWall(i); }
+				for (var i = 101; i < 123; i++) { addWall(i); }
+
+				var greyMaterial = [];
+				greyMaterial.push(new THREE.MeshLambertMaterial( { color: 0x03090B, shading: THREE.FlatShading } ));
+				greyMaterial.push(new THREE.MeshLambertMaterial( { color: 0x161919, shading: THREE.FlatShading } ));
+				greyMaterial.push(new THREE.MeshLambertMaterial( { color: 0x160908, shading: THREE.FlatShading } ));
+
+				// geometry
+
+				var extrudeSettings = {	amount: 5, bevelEnabled: false };
+				var count = 0;
+
+				$('g path', data).each(function() {
+					count++;
+
+					extrudeSettings.amount = $(this).attr('d').length / 2;
+					if ($(this).children().length > 0)
+						extrudeSettings.amount = 100;
+
+					var g = new THREE.ExtrudeGeometry(
+							transformSVGPath( $(this).attr('d') ),
+							extrudeSettings );
+
+					if (typeof g == 'undefined') return;
+					if (typeof g.faces == 'undefined') return;
+
+					g.computeFaceNormals();
+					g.computeVertexNormals( false );
+
+					g.faceUvs = [[]];
+					g.faceVertexUvs = [[]];
+
+					for (var f = 0; f < g.faces.length; f++) {
+
+						var faceuv = [
+							new THREE.Vector2(0, 1),
+							new THREE.Vector2(1, 1),
+							new THREE.Vector2(1, 0),
+							new THREE.Vector2(0, 0)
+						];
+
+						g.faceUvs[0].push(new THREE.Vector2(0, 1));
+						g.faceVertexUvs[0].push(faceuv);
+					}
+
+					var mesh = new THREE.Mesh( g, new THREE.MeshBasicMaterial() );
+					//var mesh = new THREE.Mesh(new THREE.CubeGeometry(300, 300, 300), tex);
+					mesh.position.x -= 1000;
+					mesh.position.y -= 1000;
+					//mesh.doubleSided = true;
+
+					THREE.GeometryUtils.merge(mergedGeo, mesh);
+				});
+
+				// Create textures for faces
+				function getTexForGeo(g) {
+					var tex = [];
+					for ( var m in greyMaterial ) {
+						tex.push(greyMaterial[m]);
+					}
+					for ( var m in buildingMaterials ) {
+						tex.push(buildingMaterials[m]);
+					}
+					for ( var m in greyMaterial ) {
+						tex.push(greyMaterial[m]);
+					}
+					var ix = 0;
+					// Cycle through all faces and assign maps
+					for ( var i = 0; i < g.faces.length; i++ ) {
+						if (typeof g.faces[i].d == 'undefined') {
+							g.faces[i].materialIndex = 0;
+						} else if (i % 1 == 0) {
+							// Apply texture to every Nth face
+							if (++ix >= tex.length) { ix = 0; }
+							g.faces[i].materialIndex = ix;
+						}
+					}
+					return new THREE.MeshFaceMaterial( tex );
+				}
+
+				var grp = new THREE.Mesh(mergedGeo, getTexForGeo(mergedGeo));
+
+				scene.add(grp);
+
+				//grp.rotation.z = 10 * Math.PI / 180;
+				grp.rotation.x = -90 * Math.PI / 180;
+				//grp.position.x -= 1000;
+				//grp.position.y -= 800;
+				//grp.position.z += 5;
+
+
+
+				//camera.lookAt( grp.position );
+
+				renderer = new THREE.WebGLRenderer();
+				renderer.setSize( window.innerWidth, window.innerHeight );
+
+				container.appendChild( renderer.domElement );
+
+				stats = new Stats();
+				stats.domElement.style.position = 'absolute';
+				stats.domElement.style.top = '0px';
+				// container.appendChild( stats.domElement );
+
+				//
+
+				window.addEventListener( 'resize', onWindowResize, false );
+
+			}
+
+			function onWindowResize() {
+
+				windowHalfX = window.innerWidth / 2;
+				windowHalfY = window.innerHeight / 2;
+
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+
+				renderer.setSize( window.innerWidth, window.innerHeight );
+
+			}
+
+			//
+
+			//
+
+			function animate() {
+
+				requestAnimationFrame( animate );
+				render();
+				stats.update();
+
+			}
+
+			function render() {
+
+				//plane.rotation.y = cube.rotation.y += ( targetRotation - cube.rotation.y ) * 0.05;
+
+				controls.update( clock.getDelta() );
+
+				/*
+				 camera.lookAt( scene.position );
+
+				  var timer = new Date().getTime() * 0.0005;
+
+				  camera.position.x = Math.floor(Math.cos( timer ) * 1900);
+				  camera.position.z = Math.floor(Math.sin( timer ) * 1900);
+				*/
+
+				renderer.render( scene, camera );
+
+			}
+
+		</script>
+
 	</body>
 </html>
